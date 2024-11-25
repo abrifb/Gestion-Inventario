@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Proveedores from './pages/Proveedores'; // Importa el componente Proveedores
+import Producto from './pages/Producto';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <Routes>
         {/* Ruta para la página de Proveedores */}
         <Route path="/proveedores" element={<Proveedores />} />
+        <Route path="/producto" element={<Producto />} />
 
         {/* Ruta principal */}
         <Route
