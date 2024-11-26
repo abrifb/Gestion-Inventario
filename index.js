@@ -1,7 +1,7 @@
-const express = require('express');
-const mysql = require('mysql2');
-const cors = require('cors');
-require('dotenv').config();
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 
@@ -11,18 +11,55 @@ app.use(express.json());
 
 // Conexión a la base de datos
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
 db.connect((err) => {
+  if (err) {
+    console.error("Error al conectar a la base de datos:", err.message);
+    process.exit(1); // Finaliza el proceso si no se puede conectar
+  }
+  console.log("Conectado a la base de datos MySQL");
+});
+
+/* 
+====================================
+ RUTAS DEL SERVIDOR
+====================================
+*/
+
+// ** 1. Rutas específicas (Login) **
+app.post("/login", (req, res) => {
+  const { nombreUsuario, contrasena } = req.body;
+
+  if (!nombreUsuario || !contrasena) {
+    return res.status(400).json({ error: "Usuario y contraseña son obligatorios" });
+  }
+
+  const sql = "SELECT * FROM Usuario WHERE email = ?";
+  db.query(sql, [nombreUsuario], (err, results) => {
     if (err) {
-        console.error('Error al conectar a la base de datos:', err.message);
-        process.exit(1); // Finaliza el proceso si no se puede conectar
+      console.error("Error al validar usuario:", err.message);
+      return res.status(500).json({ error: "Error interno del servidor" });
     }
-    console.log('Conectado a la base de datos MySQL');
+
+    if (results.length === 0) {
+      return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+    }
+
+    const usuario = results[0];
+
+    // Comparar la contraseña
+    if (usuario.contrasena !== contrasena) {
+      return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+    }
+
+    // Autenticación exitosa
+    res.json({ message: "Inicio de sesión exitoso", usuario });
+  });
 });
 
 // ** RUTAS PARA PROVEEDORES **

@@ -1,0 +1,163 @@
+/* Contenedor principal para la página de Ceder Tonner */
+.ceder-tonner-container {
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+/* Título principal */
+.ceder-tonner-container h3 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+.ceder-tonner-form {
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.ceder-tonner-form .form-label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #007bff;
+}
+
+.ceder-tonner-form .form-control {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.ceder-tonner-form button {
+  width: 100%;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.ceder-tonner-form button:hover {
+  background-color: #0056b3;
+}
+
+/* Tabla de tóneres disponibles */
+.tonner-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: left;
+}
+
+.tonner-table th {
+  padding: 15px;
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.tonner-table td {
+  padding: 15px;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.tonner-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tonner-table tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.tonner-table tr:hover {
+  background-color: #f1f1f1;
+  transform: scale(1.01);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Botón dentro de la tabla */
+.tonner-table .action-btn {
+  padding: 8px 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.tonner-table .action-btn:hover {
+  background-color: #218838;
+  transform: scale(1.1);
+}
+
+/* Barra de búsqueda */
+.search-bar {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-bar input {
+  width: 80%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-bar button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+}
+
+/* Para dispositivos pequeños */
+@media (max-width: 768px) {
+  .ceder-tonner-form,
+  .tonner-table {
+    margin-bottom: 20px;
+  }
+
+  .search-bar {
+    flex-direction: column;
+  }
+
+  .search-bar input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
