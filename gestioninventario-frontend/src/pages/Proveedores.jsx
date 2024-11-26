@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles/Proveedores.css';
 
-
 const Proveedores = () => {
     const [proveedores, setProveedores] = useState([]);
     const [form, setForm] = useState({
@@ -16,7 +15,6 @@ const Proveedores = () => {
     });
     const [isEditing, setIsEditing] = useState(false);
 
-    // Cargar la lista de proveedores
     useEffect(() => {
         obtenerProveedores();
     }, []);
@@ -35,7 +33,6 @@ const Proveedores = () => {
         e.preventDefault();
 
         if (isEditing) {
-            // Editar proveedor
             axios.put(`http://localhost:3000/proveedores/${form.idProveedor}`, form)
                 .then(() => {
                     alert('Proveedor actualizado');
@@ -44,7 +41,6 @@ const Proveedores = () => {
                 })
                 .catch(error => console.error('Error al actualizar proveedor:', error));
         } else {
-            // Agregar nuevo proveedor
             axios.post('http://localhost:3000/proveedores', form)
                 .then(() => {
                     alert('Proveedor agregado');
@@ -85,9 +81,8 @@ const Proveedores = () => {
     };
 
     return (
-        <div>
+        <div className="proveedores-container">
             <h1>Gestión de Proveedores</h1>
-            {/* Formulario para agregar/editar */}
             <form onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -140,9 +135,7 @@ const Proveedores = () => {
                 <button type="submit">{isEditing ? 'Actualizar' : 'Agregar'}</button>
                 {isEditing && <button type="button" onClick={resetForm}>Cancelar</button>}
             </form>
-
-            {/* Tabla de proveedores */}
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
                         <th>ID</th>

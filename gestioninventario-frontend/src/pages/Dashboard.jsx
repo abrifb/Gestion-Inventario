@@ -24,7 +24,7 @@ const Dashboard = ({ onLogout }) => {
               Ingresar Tonner a Inventario
             </button>
             <button onClick={() => navigateTo("/editar-tonner")}>
-              Editar/Eliminar Movimiento
+                Editar/Eliminar Movimiento
             </button>
           </div>
 
@@ -39,8 +39,8 @@ const Dashboard = ({ onLogout }) => {
             <button onClick={() => navigateTo("/mantenimiento-proyector")}>
               Mantenimiento Proyector
             </button>
-            <button onClick={() => navigateTo("/editar-proyector")}>
-              Editar/Eliminar Movimiento
+            <button onClick={() => navigateTo("/editar-movimiento-proyector")}>
+            Editar/Eliminar Movimiento de Proyectores
             </button>
           </div>
 

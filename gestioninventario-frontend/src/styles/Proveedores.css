@@ -1,25 +1,65 @@
-table {
+.proveedores-container {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+}
+
+.proveedores-container h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.proveedores-container table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
 }
 
-th, td {
+.proveedores-container th,
+.proveedores-container td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: center;
 }
 
-form {
+.proveedores-container form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-bottom: 20px;
+    justify-content: space-between;
 }
 
-input {
-    margin-right: 10px;
+.proveedores-container input {
+    flex: 1;
     padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    max-width: 200px;
 }
 
-button {
-    margin: 0 5px;
+.proveedores-container button {
     padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.proveedores-container button:hover {
+    background-color: #0056b3;
+}
+
+.proveedores-container button[type="button"] {
+    background-color: #6c757d;
+}
+
+.proveedores-container button[type="button"]:hover {
+    background-color: #5a6268;
 }
