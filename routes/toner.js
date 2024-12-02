@@ -2,118 +2,97 @@ const express = require("express");
 const router = express.Router();
 const db = require("../db");
 
-// Obtener todos los tóneres
+// Obtener todos los tóneres con información del proveedor
 router.get("/", (req, res) => {
-    const sql = "SELECT * FROM Toner";
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.error("Error al obtener toners:", err.message);
-            return res.status(500).json({ error: "Error al obtener toners" });
-        }
-        res.json(results); // Devuelve la lista de tóneres
-    });
+  const sql = `
+    SELECT Toner.idToner, Toner.marca, Toner.color, Toner.contenido, Toner.impresora, Proveedor.nombre AS proveedor
+    FROM Toner
+    LEFT JOIN Proveedor ON Toner.rut = Proveedor.rut_proveedor
+  `;
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error("Error al obtener tóneres:", err.message);
+      return res.status(500).json({ error: "Error al obtener tóneres" });
+    }
+    res.json(results);
+  });
 });
 
 // Agregar un nuevo tóner
 router.post("/", (req, res) => {
-    const { marca, color, contenido, impresora, rut } = req.body;
+  const { marca, color, contenido, impresora, rut } = req.body;
 
-    // Validar que los campos obligatorios estén presentes
-    if (!marca || !contenido || !impresora) {
-        return res.status(400).json({
-            error: "Los campos marca, contenido e impresora son obligatorios.",
-        });
+  if (!marca || !contenido || !impresora || !rut) {
+    return res.status(400).json({
+      error: "Los campos marca, contenido, impresora y proveedor son obligatorios.",
+    });
+  }
+
+  const sql = `
+    INSERT INTO Toner (marca, color, contenido, impresora, rut)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.query(sql, [marca, color || null, contenido, impresora, rut], (err, results) => {
+    if (err) {
+      console.error("Error al agregar tóner:", err.message);
+      return res.status(500).json({ error: "Error al agregar tóner" });
     }
-
-    // Consulta SQL para insertar un nuevo tóner
-    const sql = `
-        INSERT INTO Toner (marca, color, contenido, impresora, rut)
-        VALUES (?, ?, ?, ?, ?)
-    `;
-
-    // Ejecutar la consulta SQL
-    db.query(sql, [marca, color || null, contenido, impresora, rut || null], (err, results) => {
-        if (err) {
-            console.error("Error al agregar toner:", err.message);
-            return res.status(500).json({ error: "Error al agregar toner" });
-        }
-
-        // Respuesta exitosa
-        res.status(201).json({
-            message: "Toner agregado exitosamente.",
-            id: results.insertId, // Devuelve el ID del nuevo tóner
-        });
+    res.status(201).json({
+      message: "Tóner agregado exitosamente",
+      id: results.insertId,
     });
-});
-
-// Obtener un tóner por ID
-router.get("/:id", (req, res) => {
-    const { id } = req.params;
-
-    const sql = "SELECT * FROM Toner WHERE id = ?";
-    db.query(sql, [id], (err, results) => {
-        if (err) {
-            console.error("Error al obtener toner:", err.message);
-            return res.status(500).json({ error: "Error al obtener toner" });
-        }
-
-        if (results.length === 0) {
-            return res.status(404).json({ error: "Toner no encontrado" });
-        }
-
-        res.json(results[0]); // Devuelve el tóner encontrado
-    });
+  });
 });
 
 // Actualizar un tóner por ID
 router.put("/:id", (req, res) => {
-    const { id } = req.params;
-    const { marca, color, contenido, impresora, rut } = req.body;
+  const { id } = req.params;
+  const { marca, color, contenido, impresora, rut } = req.body;
 
-    // Validar que los campos obligatorios estén presentes
-    if (!marca || !contenido || !impresora) {
-        return res.status(400).json({
-            error: "Los campos marca, contenido e impresora son obligatorios.",
-        });
+  if (!marca || !contenido || !impresora || !rut) {
+    return res.status(400).json({
+      error: "Los campos marca, contenido, impresora y proveedor son obligatorios.",
+    });
+  }
+
+  const sql = `
+    UPDATE Toner
+    SET marca = ?, color = ?, contenido = ?, impresora = ?, rut = ?
+    WHERE idToner = ?
+  `;
+
+  db.query(sql, [marca, color || null, contenido, impresora, rut, id], (err, results) => {
+    if (err) {
+      console.error("Error al actualizar tóner:", err.message);
+      return res.status(500).json({ error: "Error al actualizar tóner" });
     }
 
-    const sql = `
-        UPDATE Toner
-        SET marca = ?, color = ?, contenido = ?, impresora = ?, rut = ?
-        WHERE id = ?
-    `;
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "Tóner no encontrado" });
+    }
 
-    db.query(sql, [marca, color || null, contenido, impresora, rut || null, id], (err, results) => {
-        if (err) {
-            console.error("Error al actualizar toner:", err.message);
-            return res.status(500).json({ error: "Error al actualizar toner" });
-        }
-
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ error: "Toner no encontrado" });
-        }
-
-        res.json({ message: "Toner actualizado exitosamente." });
-    });
+    res.json({ message: "Tóner actualizado exitosamente" });
+  });
 });
 
 // Eliminar un tóner por ID
 router.delete("/:id", (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    const sql = "DELETE FROM Toner WHERE id = ?";
-    db.query(sql, [id], (err, results) => {
-        if (err) {
-            console.error("Error al eliminar toner:", err.message);
-            return res.status(500).json({ error: "Error al eliminar toner" });
-        }
+  const sql = "DELETE FROM Toner WHERE idToner = ?";
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error("Error al eliminar tóner:", err.message);
+      return res.status(500).json({ error: "Error al eliminar tóner" });
+    }
 
-        if (results.affectedRows === 0) {
-            return res.status(404).json({ error: "Toner no encontrado" });
-        }
+    if (results.affectedRows === 0) {
+      return res.status(404).json({ error: "Tóner no encontrado" });
+    }
 
-        res.json({ message: "Toner eliminado exitosamente." });
-    });
+    res.json({ message: "Tóner eliminado exitosamente" });
+  });
 });
 
 module.exports = router;

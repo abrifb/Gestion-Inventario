@@ -5,7 +5,7 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import IngresarTonner from "./pages/IngresarTonner"; // Componente de ingreso de tóner (Añadido)
 import Proveedores from "./pages/Proveedores";
-
+import EditarMovimiento from "./pages/EditarMovimiento";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -60,6 +60,11 @@ const App = () => {
         <Route
           path="/proveedores"
           element={<ProtectedRoute element={<Proveedores />} />} // Ruta protegida para ingresar tóner
+        />
+        {/* Ruta de editar movimiento toner */}
+        <Route
+          path="/editar-tonner"
+          element={<ProtectedRoute element={<EditarMovimiento />} />} // Ruta protegida para ingresar tóner
         />
         
       </Routes>
