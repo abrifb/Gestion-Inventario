@@ -3,8 +3,10 @@ import "../styles/IngresarTonner.css";
 
 const IngresarTonner = () => {
   const [tonners, setTonners] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const handleAddTonner = (e) => {
+  const handleAddTonner = async (e) => {
     e.preventDefault();
 
     const nombre = e.target.nombre.value;
@@ -18,12 +20,39 @@ const IngresarTonner = () => {
       return;
     }
 
-    setTonners([
-      ...tonners,
-      { nombre, descripcion, precio, stock, fechaIngreso },
-    ]);
+    // Crear objeto para enviar al backend
+    const nuevoToner = {
+      marca: nombre,
+      contenido: descripcion,
+      impresora: "Genérica", // Puedes adaptarlo según tus necesidades
+      rut: "12345678-9", // Cambia por un valor dinámico si es necesario
+      stock, // Puedes eliminar esta línea si no es relevante para el backend
+    };
 
-    e.target.reset();
+    try {
+      // Solicitud POST al backend
+      const response = await fetch("http://localhost:3000/toners", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(nuevoToner),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        setErrorMessage(error.error || "Error al agregar el tóner");
+        return;
+      }
+
+      const data = await response.json();
+      setTonners([...tonners, { nombre, descripcion, precio, stock, fechaIngreso }]);
+      setSuccessMessage("Tóner agregado correctamente");
+      e.target.reset(); // Limpiar formulario
+    } catch (error) {
+      console.error("Error al agregar tóner:", error);
+      setErrorMessage("Error al conectar con el servidor.");
+    }
   };
 
   return (
@@ -33,6 +62,10 @@ const IngresarTonner = () => {
           <h3>Ingreso de Tóner al Inventario</h3>
         </div>
         <div className="card-body">
+          {/* Mensajes de éxito o error */}
+          {errorMessage && <p className="text-danger">{errorMessage}</p>}
+          {successMessage && <p className="text-success">{successMessage}</p>}
+
           <form id="ingresoForm" onSubmit={handleAddTonner}>
             <div className="mb-3">
               <label htmlFor="nombre" className="form-label">
