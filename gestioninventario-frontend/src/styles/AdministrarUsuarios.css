@@ -1,83 +1,114 @@
+/* Estilo general */
 .container {
+    margin-top: 20px;
     font-family: Arial, sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tarjeta principal */
+  .card {
+    border-radius: 10px;
+    overflow: hidden;
   }
   
   .card-header {
-    background-color: #17a2b8;
+    background: #007bff; /* Color azul para el encabezado */
     color: white;
-    text-align: center;
+    padding: 15px;
     font-size: 1.5rem;
     font-weight: bold;
-    padding: 10px 15px;
   }
   
   .card-body {
     padding: 20px;
   }
   
+  /* Tabla */
   .table {
-    width: 100%;
-    margin-top: 20px;
+    width: 80%;
+    margin-bottom: 20px;
     border-collapse: collapse;
+  }
+  
+  .table thead {
+    background-color: #f8f9fa;
+    color: #333;
   }
   
   .table th,
   .table td {
-    padding: 12px 15px;
+    padding: 10px;
     text-align: left;
-    border: 1px solid #ddd;
+    border: 1px solid #dee2e6;
   }
   
-  .table th {
-    background-color: #17a2b8;
-    color: white;
-  }
-  
-  .table tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
-  }
-  
-  .table tbody tr:hover {
+  .table-hover tbody tr:hover {
     background-color: #f1f1f1;
   }
   
+  .table th {
+    font-weight: bold;
+  }
+  
+  .table td input[type="text"] {
+    width: 80%;
+    padding: 5px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+  }
+  
+  /* Botones */
   .btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
     font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .btn-sm {
+    padding: 5px 8px;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
   }
   
   .btn-warning {
     background-color: #ffc107;
-    color: white;
-    border: none;
+    color: black;
   }
   
   .btn-warning:hover {
     background-color: #e0a800;
   }
   
-  .btn-danger {
-    background-color: #dc3545;
-    color: white;
-    border: none;
+  /* Espaciado adicional */
+  .me-2 {
+    margin-right: 8px;
   }
   
-  .btn-danger:hover {
-    background-color: #c82333;
-  }
+  /* Responsividad */
+  @media (max-width: 768px) {
+    .card-header {
+      font-size: 1.2rem;
+      text-align: center;
+    }
   
-  .btn-success {
-    background-color: #28a745;
-    color: white;
-    border: none;
-  }
+    .table th,
+    .table td {
+      font-size: 0.9rem;
+      padding: 8px;
+    }
   
-  .btn-success:hover {
-    background-color: #218838;
+    .btn {
+      font-size: 0.8rem;
+      padding: 5px 8px;
+    }
   }
   

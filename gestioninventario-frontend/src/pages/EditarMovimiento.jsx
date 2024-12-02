@@ -136,12 +136,7 @@ const EditarMovimiento = () => {
                   >
                     Editar
                   </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={() => eliminarMovimiento(index)}
-                  >
-                    Eliminar
-                  </button>
+                  
                 </td>
               </tr>
             ))}

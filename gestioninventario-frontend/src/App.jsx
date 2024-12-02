@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import React, { useState } from "react";
-import "./App.css";
-import Dashboard from "./pages/Dashboard";
+import React, { useState, useEffect } from "react";
+import "./styles/Login.css"; // Ruta correcta para los estilos globales
 import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
 import CederTonner from "./pages/CederTonner";
 import IngresarTonner from "./pages/IngresarTonner";
 import EditarMovimiento from "./pages/EditarMovimiento";
@@ -14,46 +14,34 @@ import AdministrarUsuarios from "./pages/AdministrarUsuarios";
 import Proveedores from "./pages/Proveedores";
 import Reportes from "./pages/Reportes";
 
-
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleLogin = async (username, password) => {
-    try {
-      const response = await fetch("http://localhost:3000/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          nombreUsuario: username,
-          contrasena: password,
-        }),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        alert(error.error);
-        return;
-      }
-
-      const data = await response.json();
-      console.log("Usuario autenticado:", data.usuario);
-      setIsAuthenticated(true); // Cambiamos el estado a autenticado si el login es exitoso
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      alert("Error al conectar con el servidor");
+  // Verifica el token en el localStorage al cargar la aplicación
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsAuthenticated(true);
     }
+  }, []);
+
+  const handleLogin = async (data) => {
+    setIsAuthenticated(true); // Cambiar estado a autenticado
   };
 
   const handleLogout = () => {
-    setIsAuthenticated(false); // Cambiamos el estado a no autenticado al cerrar sesión
+    localStorage.removeItem("token"); // Eliminar token del localStorage
+    setIsAuthenticated(false); // Cambiar estado a no autenticado
+  };
+
+  const ProtectedRoute = ({ element }) => {
+    return isAuthenticated ? element : <Navigate to="/" />;
   };
 
   return (
     <Router>
       <Routes>
-        {/* Ruta principal: Login o redirección al Dashboard */}
+        {/* Ruta principal */}
         <Route
           path="/"
           element={
@@ -64,95 +52,61 @@ const App = () => {
             )
           }
         />
+
         {/* Ruta del Dashboard */}
         <Route
           path="/dashboard"
-          element={
-            isAuthenticated ? (
-              <Dashboard onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          element={<ProtectedRoute element={<Dashboard onLogout={handleLogout} />} />}
         />
-        {/* Ruta para Ceder Tonner */}
+
+        {/* Rutas relacionadas con Tonner */}
         <Route
           path="/ceder-tonner"
-          element={
-            isAuthenticated ? (
-              <CederTonner />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          element={<ProtectedRoute element={<CederTonner />} />}
         />
-        {/* Ruta para Ingresar Tonner */}
         <Route
           path="/ingresar-tonner"
-          element={
-            isAuthenticated ? (
-              <IngresarTonner /> // Nuevo componente "Ingresar Tonner"
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          element={<ProtectedRoute element={<IngresarTonner />} />}
         />
         <Route
           path="/editar-tonner"
-          element={
-            isAuthenticated ? <EditarMovimiento /> : <Navigate to="/" />
-          }
+          element={<ProtectedRoute element={<EditarMovimiento />} />}
         />
+
+        {/* Rutas relacionadas con Proyector */}
         <Route
           path="/prestar-proyector"
-          element={isAuthenticated ? <PrestarProyector /> : <Navigate to="/" />}
+          element={<ProtectedRoute element={<PrestarProyector />} />}
         />
         <Route
           path="/ingresar-proyector"
-          element={isAuthenticated ? <IngresarProyector /> : <Navigate to="/" />}
-        />
-        {/* Redirección para rutas no existentes */}
-        <Route path="*" element={<Navigate to="/" />} 
+          element={<ProtectedRoute element={<IngresarProyector />} />}
         />
         <Route
           path="/mantenimiento-proyector"
-          element={isAuthenticated ? <MantenimientoProyector /> : <Navigate to="/" />}
+          element={<ProtectedRoute element={<MantenimientoProyector />} />}
         />
         <Route
           path="/editar-movimiento-proyector"
-          element={
-            isAuthenticated ? (
-              <EditarEliminarMovimientoProyectores />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          element={<ProtectedRoute element={<EditarEliminarMovimientoProyectores />} />}
         />
+
+        {/* Rutas de Administración */}
         <Route
           path="/administrar-usuarios"
-          element={
-            isAuthenticated ? (
-              <AdministrarUsuarios />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          element={<ProtectedRoute element={<AdministrarUsuarios />} />}
+        />
+        <Route
+          path="/proveedores"
+          element={<ProtectedRoute element={<Proveedores />} />}
         />
         <Route
           path="/reportes"
-          element={isAuthenticated ? 
-          <Reportes /> : <Navigate to="/" />}
-      />
-        <Route
-          path="/proveedores"
-          element={
-            isAuthenticated ? (
-              <Proveedores />
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          element={<ProtectedRoute element={<Reportes />} />}
         />
+
+        {/* Redirección global para rutas no existentes */}
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );

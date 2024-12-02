@@ -160,7 +160,7 @@ const Proveedores = () => {
                             <td>{proveedor.email}</td>
                             <td>
                                 <button onClick={() => handleEdit(proveedor)}>Editar</button>
-                                <button onClick={() => handleDelete(proveedor.idProveedor)}>Eliminar</button>
+                                
                             </td>
                         </tr>
                     ))}
