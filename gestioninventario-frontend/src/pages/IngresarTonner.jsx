@@ -125,14 +125,14 @@ const IngresarTonner = () => {
 
             <div className="mb-3">
               <label htmlFor="contenido" className="form-label">
-                Contenido (ml)
+                Cantidad
               </label>
               <input
                 type="number"
                 className="form-control"
                 id="contenido"
                 name="contenido"
-                placeholder="Ingrese el contenido del tóner"
+                placeholder="Ingrese la cantidad"
                 min="0"
                 required
               />
@@ -189,7 +189,7 @@ const IngresarTonner = () => {
               <th>ID</th>
               <th>Marca</th>
               <th>Color</th>
-              <th>Contenido (ml)</th>
+              <th>Cantidad</th>
               <th>Impresora</th>
               <th>Proveedor</th>
             </tr>

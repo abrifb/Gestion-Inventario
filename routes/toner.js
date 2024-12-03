@@ -18,6 +18,31 @@ router.get("/", (req, res) => {
   });
 });
 
+// Obtener un tóner por ID
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+
+  const sql = `
+    SELECT Toner.idToner, Toner.marca, Toner.color, Toner.contenido, Toner.impresora, Proveedor.nombre AS proveedor
+    FROM Toner
+    LEFT JOIN Proveedor ON Toner.rut = Proveedor.rut_proveedor
+    WHERE Toner.idToner = ?
+  `;
+
+  db.query(sql, [id], (err, results) => {
+    if (err) {
+      console.error("Error al obtener el tóner:", err.message);
+      return res.status(500).json({ error: "Error al obtener el tóner" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Tóner no encontrado" });
+    }
+
+    res.json(results[0]); // Devuelve el registro encontrado
+  });
+});
+
 // Agregar un nuevo tóner
 router.post("/", (req, res) => {
   const { marca, color, contenido, impresora, rut } = req.body;

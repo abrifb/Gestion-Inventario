@@ -36,9 +36,6 @@ const Dashboard = ({ onLogout }) => {
             <button onClick={() => navigateTo("/ingresar-proyector")}>
               Ingresar Proyector a Inventario
             </button>
-            <button onClick={() => navigateTo("/mantenimiento-proyector")}>
-              Mantenimiento Proyector
-            </button>
             <button onClick={() => navigateTo("/editar-movimiento-proyector")}>
             Editar Movimiento de Proyectores
             </button>

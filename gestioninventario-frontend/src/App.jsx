@@ -6,6 +6,11 @@ import Dashboard from "./pages/Dashboard";
 import IngresarTonner from "./pages/IngresarTonner"; // Componente de ingreso de tóner (Añadido)
 import Proveedores from "./pages/Proveedores";
 import EditarMovimiento from "./pages/EditarMovimiento";
+import CederTonner from "./pages/CederTonner";
+import PrestarProyector from "./pages/PrestarProyector";
+import IngresarProyector from "./pages/IngresarProyector";
+import EditarEliminarMovimientoProyectores from "./pages/EditarEliminarMovimientoProyectores";
+import AdministrarUsuarios from "./pages/AdministrarUsuarios";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -54,20 +59,44 @@ const App = () => {
         {/* Ruta de ingreso de tóner */}
         <Route
           path="/ingresar-tonner"
-          element={<ProtectedRoute element={<IngresarTonner />} />} // Ruta protegida para ingresar tóner
+          element={<ProtectedRoute element={<IngresarTonner />} />} // Ruta protegida de ingreso de tóner
         />
         {/* Ruta de PROVEEDORES */}
         <Route
           path="/proveedores"
-          element={<ProtectedRoute element={<Proveedores />} />} // Ruta protegida para ingresar tóner
+          element={<ProtectedRoute element={<Proveedores />} />} // Ruta protegida de PROVEEDORES
         />
         {/* Ruta de editar movimiento toner */}
         <Route
           path="/editar-tonner"
           element={<ProtectedRoute element={<EditarMovimiento />} />} // Ruta protegida para ingresar tóner
         />
+        {/* Ruta de ceder toner */}
+        <Route
+          path="/ceder-tonner"
+          element={<ProtectedRoute element={<CederTonner />} />} // Ruta protegida de ceder toner
+        />
+        {/* Ruta de prestar proyecto */}
+        <Route
+          path="/prestar-proyector"
+          element={<ProtectedRoute element={<PrestarProyector />} />} // Ruta protegida de prestar proyecto 
+        />
+        {/* Ruta de ingresar proyector */}
+        <Route
+          path="/ingresar-proyector"
+          element={<ProtectedRoute element={<IngresarProyector />} />} // Ruta protegida de ingresar proyector
+        />
+        <Route
+          path="/editar-movimiento-proyector"
+          element={<ProtectedRoute element={<EditarEliminarMovimientoProyectores />} />} // Ruta protegida de ingresar proyector
+        />
+        <Route
+          path="/administrar-usuarios"
+          element={<ProtectedRoute element={<AdministrarUsuarios />} />} // Ruta protegida de ingresar proyector
+        />
         
       </Routes>
+      
     </Router>
   );
 };
