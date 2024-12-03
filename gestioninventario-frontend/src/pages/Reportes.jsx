@@ -77,15 +77,17 @@ const Reportes = () => {
               required
             >
               <option value="proveedores">Listado de Proveedores</option>
-              <option value="productos">Listado de Productos</option>
-              <option value="bajoStock">Reportes de Inventario</option>
+              
               <option value="movimientosUsuarios">Reportes de Usuarios</option>
               <option value="movimientosInventario">
-                Reportes de Movimiento de Inventario
+                Reportes de Movimiento Toner
+              </option>
+              <option value="movimientosInventario">
+                Reportes de Movimiento Proyectores
               </option>
               <option value="toners">Reportes de Toners</option>
               <option value="proyectores">Reportes de Proyectores</option>
-              <option value="mantenimientos">Reportes de Mantenimientos</option>
+              
             </select>
 
             <button type="button" onClick={downloadFilteredReport}>

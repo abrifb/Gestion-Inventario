@@ -11,6 +11,7 @@ import PrestarProyector from "./pages/PrestarProyector";
 import IngresarProyector from "./pages/IngresarProyector";
 import EditarEliminarMovimientoProyectores from "./pages/EditarEliminarMovimientoProyectores";
 import AdministrarUsuarios from "./pages/AdministrarUsuarios";
+import Reportes from "./pages/Reportes";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -94,7 +95,10 @@ const App = () => {
           path="/administrar-usuarios"
           element={<ProtectedRoute element={<AdministrarUsuarios />} />} // Ruta protegida de ingresar proyector
         />
-        
+        <Route
+          path="/reportes"
+          element={<ProtectedRoute element={<Reportes/>} />} // Ruta protegida de ingresar proyector
+        />
       </Routes>
       
     </Router>
