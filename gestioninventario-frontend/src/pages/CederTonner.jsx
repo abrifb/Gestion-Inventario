@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import "../styles/CederTonner.css";
 
 const CederTonner = () => {
-  const [tonners, setTonners] = useState([]);
+  const [tonners, setTonners] = useState([]); // Lista de tóners disponibles
+  const [selectedTonner, setSelectedTonner] = useState(""); // Tóner seleccionado
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
+    // Cargar los tóners al iniciar
     const fetchTonners = async () => {
       try {
-        const response = await fetch("http://localhost:3000/toners");
-        if (!response.ok) {
-          throw new Error("Error al cargar tóneres");
-        }
-        const data = await response.json();
-        setTonners(data);
+        const response = await axios.get("http://localhost:3000/toners");
+        setTonners(response.data);
       } catch (error) {
-        console.error("Error al obtener tóneres:", error);
+        console.error("Error al obtener tóners:", error);
+        setErrorMessage("Error al cargar la lista de tóners.");
       } finally {
         setLoading(false);
       }
@@ -24,109 +26,64 @@ const CederTonner = () => {
     fetchTonners();
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-
-    const newTonner = {
-      marca: formData.get("marca"),
-      color: formData.get("color"),
-      contenido: parseInt(formData.get("contenido"), 10),
-      impresora: formData.get("impresora"),
-    };
+  const handleCederTonner = async () => {
+    if (!selectedTonner) {
+      alert("Por favor, seleccione un tóner.");
+      return;
+    }
 
     try {
-      const response = await fetch("http://localhost:3000/toners", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newTonner),
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        alert(error.error);
-        return;
-      }
-
-      const savedTonner = await response.json();
-      setTonners((prevTonners) => [...prevTonners, savedTonner]);
-      e.target.reset();
+      await axios.delete(`http://localhost:3000/toners/${selectedTonner}`);
+      setSuccessMessage("Tóner cedido correctamente.");
+      setTonners((prevTonners) =>
+        prevTonners.filter((tonner) => tonner.idToner !== parseInt(selectedTonner))
+      );
+      setSelectedTonner(""); // Limpiar selección
     } catch (error) {
-      console.error("Error al agregar tóner:", error);
-      alert("Error al conectar con el servidor");
+      console.error("Error al ceder el tóner:", error);
+      setErrorMessage("Error al ceder el tóner.");
     }
   };
 
   if (loading) {
-    return <p>Cargando tóneres...</p>;
+    return <p>Cargando tóners...</p>;
   }
 
   return (
     <div className="container">
       <div className="card shadow">
         <div className="card-header text-center">
-          <h3>Registro de Movimiento - Ceder Tonner</h3>
+          <h3>Ceder Tóner</h3>
         </div>
         <div className="card-body">
-          <form id="cederTonnerForm" onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label htmlFor="marca" className="form-label">
-                Marca:
-              </label>
-              <input
-                type="text"
-                id="marca"
-                name="marca"
-                className="form-control"
-                placeholder="Ej: HP"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="color" className="form-label">
-                Color:
-              </label>
-              <input
-                type="text"
-                id="color"
-                name="color"
-                className="form-control"
-                placeholder="Ej: Negro"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="contenido" className="form-label">
-                Contenido (ml):
-              </label>
-              <input
-                type="number"
-                id="contenido"
-                name="contenido"
-                className="form-control"
-                placeholder="Ej: 250"
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="impresora" className="form-label">
-                Impresora:
-              </label>
-              <input
-                type="text"
-                id="impresora"
-                name="impresora"
-                className="form-control"
-                placeholder="Ej: LaserJet 1200"
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-success w-100">
-              Ceder
-            </button>
-          </form>
+          {errorMessage && <p className="text-danger">{errorMessage}</p>}
+          {successMessage && <p className="text-success">{successMessage}</p>}
+
+          <div className="mb-3">
+            <label htmlFor="tonnerSelect" className="form-label">
+              Seleccione un tóner para ceder:
+            </label>
+            <select
+              id="tonnerSelect"
+              className="form-control"
+              value={selectedTonner}
+              onChange={(e) => setSelectedTonner(e.target.value)}
+            >
+              <option value="">Seleccione un tóner</option>
+              {tonners.map((tonner) => (
+                <option key={tonner.idToner} value={tonner.idToner}>
+                  {`${tonner.marca} - ${tonner.color} - ${tonner.impresora} (${tonner.contenido} ml)`}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <button
+            className="btn btn-danger w-100"
+            onClick={handleCederTonner}
+          >
+            Ceder Tóner
+          </button>
         </div>
       </div>
 

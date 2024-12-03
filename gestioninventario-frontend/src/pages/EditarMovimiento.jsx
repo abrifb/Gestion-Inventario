@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../styles/EditarMovimiento.css";
 
-const EditarMovimiento = ({ rutUsuario }) => {
+const EditarMovimiento = () => {
   const [toners, setToners] = useState([]); // Lista de tóners registrados
   const [editingRow, setEditingRow] = useState(null); // Fila que se está editando
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     obtenerToners();
@@ -15,7 +17,8 @@ const EditarMovimiento = ({ rutUsuario }) => {
       const response = await axios.get("http://localhost:3000/toners");
       setToners(response.data);
     } catch (error) {
-      console.error("Error al obtener tóneres:", error);
+      console.error("Error al obtener tóners:", error);
+      setErrorMessage("Error al cargar la lista de tóners.");
     }
   };
 
@@ -33,27 +36,27 @@ const EditarMovimiento = ({ rutUsuario }) => {
   };
 
   const handleSaveRow = async (toner) => {
-    const { idToner, marca, color, contenido, impresora, proveedor } = toner;
+    const { idToner, marca, color, contenido, impresora, rut } = toner;
 
-    if (!marca || !contenido || !impresora || !proveedor) {
-      alert("Por favor, complete todos los campos requeridos.");
+    if (!marca || !contenido || !impresora) {
+      alert("Por favor, complete todos los campos obligatorios.");
       return;
     }
 
     try {
       await axios.put(`http://localhost:3000/toners/${idToner}`, {
         marca,
-        color,
+        color: color || null,
         contenido,
         impresora,
-        rut: toner.rut, // Rut del proveedor
+        rut: rut || null,
       });
-      alert("Tóner actualizado correctamente.");
-      setEditingRow(null); // Salir del modo de edición
-      obtenerToners(); // Actualizar la tabla
+      setSuccessMessage("Tóner actualizado exitosamente.");
+      setEditingRow(null);
+      obtenerToners();
     } catch (error) {
-      console.error("Error al modificar tóner:", error);
-      alert("Error al modificar el tóner.");
+      console.error("Error al modificar el tóner:", error);
+      setErrorMessage("Error al modificar el tóner.");
     }
   };
 
@@ -64,6 +67,8 @@ const EditarMovimiento = ({ rutUsuario }) => {
           <h3>Editar Tóner</h3>
         </div>
         <div className="card-body">
+          {errorMessage && <p className="text-danger">{errorMessage}</p>}
+          {successMessage && <p className="text-success">{successMessage}</p>}
           <h4>Tóneres Registrados</h4>
           <table className="table table-bordered table-hover">
             <thead className="table-info">
@@ -73,7 +78,7 @@ const EditarMovimiento = ({ rutUsuario }) => {
                 <th>Color</th>
                 <th>Contenido</th>
                 <th>Impresora</th>
-                <th>Proveedor</th>
+                <th>Proveedor (RUT)</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -86,7 +91,9 @@ const EditarMovimiento = ({ rutUsuario }) => {
                       <input
                         type="text"
                         value={toner.marca}
-                        onChange={(e) => handleInputChange(e, toner.idToner, "marca")}
+                        onChange={(e) =>
+                          handleInputChange(e, toner.idToner, "marca")
+                        }
                       />
                     ) : (
                       toner.marca
@@ -97,7 +104,9 @@ const EditarMovimiento = ({ rutUsuario }) => {
                       <input
                         type="text"
                         value={toner.color || ""}
-                        onChange={(e) => handleInputChange(e, toner.idToner, "color")}
+                        onChange={(e) =>
+                          handleInputChange(e, toner.idToner, "color")
+                        }
                       />
                     ) : (
                       toner.color || "N/A"
@@ -108,7 +117,9 @@ const EditarMovimiento = ({ rutUsuario }) => {
                       <input
                         type="number"
                         value={toner.contenido}
-                        onChange={(e) => handleInputChange(e, toner.idToner, "contenido")}
+                        onChange={(e) =>
+                          handleInputChange(e, toner.idToner, "contenido")
+                        }
                       />
                     ) : (
                       toner.contenido
@@ -119,7 +130,9 @@ const EditarMovimiento = ({ rutUsuario }) => {
                       <input
                         type="text"
                         value={toner.impresora}
-                        onChange={(e) => handleInputChange(e, toner.idToner, "impresora")}
+                        onChange={(e) =>
+                          handleInputChange(e, toner.idToner, "impresora")
+                        }
                       />
                     ) : (
                       toner.impresora
@@ -128,12 +141,14 @@ const EditarMovimiento = ({ rutUsuario }) => {
                   <td>
                     {editingRow === toner.idToner ? (
                       <input
-                        type="text"
-                        value={toner.proveedor || ""}
-                        disabled // Solo lectura, asumimos que se usa `rut` en el backend
+                        type="number"
+                        value={toner.rut || ""}
+                        onChange={(e) =>
+                          handleInputChange(e, toner.idToner, "rut")
+                        }
                       />
                     ) : (
-                      toner.proveedor || "N/A"
+                      toner.rut || "N/A"
                     )}
                   </td>
                   <td>
